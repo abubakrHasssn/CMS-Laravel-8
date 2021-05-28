@@ -1,0 +1,186 @@
+/*custom css*/
+
+.card-google-plus {
+    position: relative;
+    border-radius: 0px;
+    border: 1px solid rgb(216, 216, 216);
+    font-family: 'Roboto', sans-serif;
+}
+.card-google-plus > .dropdown {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+}
+.card-google-plus > .dropdown > span > span {
+    font-size: 10px;
+}
+.card-google-plus > .dropdown > .dropdown-menu {
+    left: initial;
+    right: 0px;
+    border-radius: 2px;
+}
+.card-google-plus > .card-google-plus-tags {
+    position: absolute;
+    top: 35px;
+    right: -3px;
+}
+.card-google-plus > .card-google-plus-tags > ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+.card-google-plus > .card-google-plus-tags > ul:hover {
+    box-shadow: 0px 0px 3px rgb(0, 0, 0);
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);
+}
+.card-google-plus > .card-google-plus-tags > ul > li {
+    display: block;
+    right: 0px;
+    width: 0px;
+    padding: 5px 0px 5px 0px;
+    background-color: rgb(245, 245, 245);
+    font-size: 12px;
+    overflow: hidden;
+}
+.card-google-plus > .card-google-plus-tags > ul > li::after {
+    content:"";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 100%;
+    border-right: 3px solid rgb(66, 127, 237);
+}
+.card-google-plus > .card-google-plus-tags > ul:hover > li,
+.card-google-plus > .card-google-plus-tags > ul > li:first-child {
+    padding: 5px 15px 5px 10px;
+    width: auto;
+    cursor: pointer;
+    margin-left: auto;
+}
+.card-google-plus > .card-google-plus-tags > ul:hover > li {
+    background-color: rgb(255, 255, 255);
+}
+.card-google-plus > .card-google-plus-tags > ul > li:hover {
+    background-color: rgb(66, 127, 237);
+    color: rgb(255, 255, 255);
+}
+.card-google-plus > .card-heading,
+.card-google-plus > .card-footer {
+    background-color: rgb(255, 255, 255);
+    border-width: 0px;
+}
+.card-google-plus > .card-heading {
+    margin-top: 20px;
+    padding-bottom: 5px;
+}
+.card-google-plus > .card-heading > img {
+    margin-right: 15px;
+}
+.card-google-plus > .card-heading > h3 {
+    margin: 0px;
+    font-size: 14px;
+    font-weight: 700;
+}
+.card-google-plus > .card-heading > h5 {
+    color: rgb(153, 153, 153);
+    font-size: 12px;
+    font-weight: 400;
+}
+.card-google-plus > .card-body {
+    padding-top: 5px;
+    font-size: 13px;
+}
+.card-google-plus > .card-body > .card-google-plus-image {
+    display: block;
+    text-align: center;
+    background-color: rgb(245, 245, 245);
+    border: 1px solid rgb(217, 217, 217);
+}
+.card-google-plus > .card-body > .card-google-plus-image > img {
+    max-width: 100%;
+}
+
+.card-google-plus > .card-footer {
+    font-size: 14px;
+    font-weight: 700;
+    min-height: 54px;
+}
+.card-google-plus > .card-footer > .btn {
+    float: left;
+    margin-right: 8px;
+}
+.card-google-plus > .card-footer > .input-placeholder {
+    display: block;
+    margin-left: 98px;
+    color: rgb(153, 153, 153);
+    font-size: 12px;
+    font-weight: 400;
+    padding: 8px 6px 7px;
+    border: 1px solid rgb(217, 217, 217);
+    border-radius: 2px;
+    box-shadow: rgba(0, 0, 0, 0.0470588) 0px 1px 0px 0px;
+}
+.card-google-plus.card-google-plus-show-comment > .card-footer > .input-placeholder {
+    display: none;
+}
+.card-google-plus > .card-google-plus-comment {
+    display: none;
+    padding: 10px 20px 15px;
+    border-top: 1px solid rgb(229, 229, 229);
+    background-color: rgb(245, 245, 245);
+}
+.card-google-plus.card-google-plus-show-comment > .card-google-plus-comment {
+    display: block;
+}
+/*.card-google-plus > .card-google-plus-comment > img {
+    float: left;
+}*/
+.card-google-plus > .card-google-plus-comment > form > .card-google-plus-textarea {
+    float: right;
+    width: calc(100% - 56px);
+}
+.card-google-plus > .card-google-plus-comment > form > .card-google-plus-textarea > textarea {
+    display: block;
+    /*margin-left: 60px;
+    width: calc(100% - 56px);*/
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(217, 217, 217);
+    box-shadow: rgba(0, 0, 0, 0.0470588) 0px 1px 0px 0px;
+    resize: vertical;
+}
+.card-google-plus > .card-google-plus-comment > form > .card-google-plus-textarea > .btn {
+    margin-top: 10px;
+    margin-right: 8px;
+    width: 100%;
+}
+@media (min-width: 992px) {
+    .card-google-plus > .card-google-plus-comment > form > .card-google-plus-textarea > .btn {
+        width: auto;
+    }
+}
+
+
+.card-google-plus .btn {
+    border-radius: 3px;
+}
+.card-google-plus .btn-default {
+    border: 1px solid rgb(217, 217, 217);
+    box-shadow: rgba(0, 0, 0, 0.0470588) 0px 1px 0px 0px;
+}
+.card-google-plus .btn-default:hover,
+.card-google-plus .btn-default:focus,
+.card-google-plus .btn-default:active {
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(0, 0, 0);
+}
+.img-circle{
+    border-radius: 50% ;
+}
+.text-color-gray{
+    color: gray;
+}
+
+.post-card{
+    min-height: 350px !important;
+}
