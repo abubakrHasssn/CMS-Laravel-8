@@ -46,7 +46,8 @@ class PostsController extends Controller
      */
     public function store(CreatePostRequest $request)
     {
-
+        //get last inserted id
+        $last_id = Post::all()->count() > 0 ? Post::all()->last()->id : 0;
         $image =$request->image->store('posts');
             $post = auth()->user()->posts()->create([
             'title'         =>$request->title,
@@ -55,8 +56,7 @@ class PostsController extends Controller
             'published_at'  =>$request->published_at,
             'image'         =>$image,
             'category_id'   =>$request->category,
-            'slug' => Str::slug($request->title)
-
+            'slug' => Str::slug($request->title).'-'.$last_id+1 //random
         ]);
         if($request->tags){
             $post->tags()->attach($request->tags);
@@ -100,7 +100,7 @@ class PostsController extends Controller
     {
         $data = $request->only(['title','description','contents','published_at']);
         $data['category_id'] = $request->category;
-        $data['slug'] = Str::slug($request->title);
+        $data['slug'] = Str::slug($request->title).'-'.$post->id;
         if($request->hasFile('image')){
             $image = $request->image->store('posts');
             $post->deleteImage();
