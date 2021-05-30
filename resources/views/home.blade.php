@@ -76,6 +76,10 @@
     @auth()
         <hr>
         <a class="btn btn-outline-primary d-flex justify-content-center" href="{{route('posts.create')}}">Create New Post</a>
+        <ul class="list-group mt-2">
+            <li class="list-group-item" ><a href="{{route('user.posts')}}">My Posts</a></li>
+            <li class="list-group-item" ><a href="{{route('user.posts.trashed')}}">My Trashed Posts</a></li>
+        </ul>
     @endauth
     <hr>
 

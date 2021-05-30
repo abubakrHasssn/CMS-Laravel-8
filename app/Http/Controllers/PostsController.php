@@ -16,6 +16,7 @@ class PostsController extends Controller
     {
         $this->middleware(['verifyCategoriesCount'])->only('create','store');
         $this->middleware(['auth'])->except('show');
+        $this->middleware(['auth','admin'])->only('index');
     }
 
     /**
@@ -56,19 +57,19 @@ class PostsController extends Controller
             'published_at'  =>$request->published_at,
             'image'         =>$image,
             'category_id'   =>$request->category,
-            'slug' => Str::slug($request->title).'-'.$last_id+1 //random
+            'slug' => Str::slug($request->title).'-'.$last_id+1
         ]);
         if($request->tags){
             $post->tags()->attach($request->tags);
         }
         session()->flash('success','Post Created Successfully.');
-        return redirect(route('posts.index'));
+        return redirect(route('user.posts'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param Post $post
      * @return void
      */
     public function show(Post $post)
@@ -84,9 +85,14 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        $categories = Category::all();
-        $tags = Tag::all();
-        return view('posts.create',compact('post','categories','tags'));
+        if (auth()->user()->isAdmin() ||  auth()->user()->id === $post->user->id) {
+            $categories = Category::all();
+            $tags = Tag::all();
+            return view('posts.create', compact('post', 'categories', 'tags'));
+        }else{
+            session()->flash('warning','you dont have permission to edit this.');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -111,7 +117,7 @@ class PostsController extends Controller
             $post->tags()->sync($request->tags);
         }
         session()->flash('success','post updated successfully.');
-        return redirect(route('posts.index'));
+        return redirect(route('user.posts'));
     }
 
 
@@ -132,14 +138,25 @@ class PostsController extends Controller
             $post->delete();
             session()->flash('success','post has been trashed.');
         }
-        return redirect(route('posts.index'));
+        return redirect()->back();
     }
 
+    /**
+     * fetch trashed posts
+     *
+     * @return View
+     */
     public function trashed(){
         $trashed = Post::onlyTrashed()->get();
         return view('posts.index')->with('posts',$trashed);
     }
 
+    /**
+     * restore trashed post
+     *
+     * @param $id
+     * @return RedirectResponse
+     */
     public function restore($id){
         $post = Post::withTrashed()->whereId($id)->firstOrFail();
         $post->restore();
@@ -147,4 +164,22 @@ class PostsController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * Return auth user posts
+     *
+     * @return View
+     */
+    public function userPosts(){
+        return view('posts.index')->with('posts',auth()->user()->posts);
+    }
+
+    /**
+     * Return auth user trashed posts
+     *
+     * @return View
+     */
+    public function userTrashedPost(){
+        $trashed = auth()->user()->posts()->onlyTrashed()->get();
+        return view('posts.index')->with('posts',$trashed);
+    }
 }

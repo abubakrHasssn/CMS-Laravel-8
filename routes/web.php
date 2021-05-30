@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function (){
     Route::resource('categories',App\Http\Controllers\CategoriesController::class);
 
     Route::resource('tags',App\Http\Controllers\TagsController::class);
-    
+
     Route::get('posts/trashed',[\App\Http\Controllers\PostsController::class,'trashed'])->name('posts.trashed');
 
     Route::put('post/{post}/restore',[\App\Http\Controllers\PostsController::class,'restore'])->name('posts.restore');
@@ -38,6 +38,10 @@ Route::middleware('auth')->group(function (){
     Route::PUT('profile/update',[\App\Http\Controllers\UsersController::class,'updateProfile'])->name('users.profile.update');
 
     Route::resource('posts/{post}/comments',\App\Http\Controllers\CommentsController::class);
+
+    Route::get('user/posts',[\App\Http\Controllers\PostsController::class,'userPosts'])->name('user.posts');
+
+    Route::get('user/posts/trashed',[\App\Http\Controllers\PostsController::class,'userTrashedPost'])->name('user.posts.trashed');
 
 });
 
