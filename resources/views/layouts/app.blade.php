@@ -40,7 +40,7 @@
                     <ul class="navbar-nav mr-auto">
                         @auth()
                             @if(auth()->user()->isAdmin())
-                                <li class="nav-link "><a href="/admin">Admin</a></li>
+                                <li class="nav-item nav-link"><a href="/admin">Admin</a></li>
                             @endif
                         @endauth
                     </ul>
@@ -62,54 +62,35 @@
                                 </li>
                             @endif
                         @else
-                        <!-- Nav Item - Alerts -->
+                        <!-- Nav Item - Notifications -->
                             <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle " href="#" id="alertsDropdown" role="button"
+                                <a class="btn nav-link dropdown-toggle " href="" id="alertsDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-bell fa-fw"></i>
-                                    <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter">3+</span>
+                                    <!-- Counter - Notifications -->
+                                    <span class="badge badge-danger badge-counter">{{auth()->user()->unReadNotifications->count()}}</span>
                                 </a>
-                                <!-- Dropdown - Alerts -->
+                                <!-- Dropdown - Notifications -->
                                 <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                      aria-labelledby="alertsDropdown">
                                     <h6 class="dropdown-header">
-                                        Alerts Center
+                                        Notifications
                                     </h6>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-file-alt text-white"></i>
+                                    <hr>
+                                    @if(auth()->user()->notifications->count() > 0)
+                                        @foreach(auth()->user()->notifications()->paginate(4) as $notification)
+                                        <a class="{{$notification->read_at === null ? 'bg-gray-200':''}} dropdown-item d-flex align-items-center" href="{{route('posts.show',$notification->data['post_slug'])}}">
+                                            <div class="notification">
+                                                <div class="small text-gray-500">{{$notification->created_at->toFormattedDateString()}}</div>
+                                                <span class="font-weight-bold text-primary">{{$notification->data['name']}}</span>
+                                                <span class="small text-gray-500">commented in your Post</span>
+                                                <span class="font-weight-bold text-primary">{{$notification->data['post_title']}}</span>
                                             </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">December 12, 2019</div>
-                                            <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-success">
-                                                <i class="fas fa-donate text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">December 7, 2019</div>
-                                            $290.29 has been deposited into your account!
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-warning">
-                                                <i class="fas fa-exclamation-triangle text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">December 2, 2019</div>
-                                            Spending Alert: We've noticed unusually high spending for your account.
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                        </a>
+                                            <hr>
+                                        @endforeach
+                                    @endif()
+                                    <a class="dropdown-item text-center small text-gray-500" href="{{route('notifications')}}">Show All Notifications</a>
                                 </div>
                             </li>
                             <!-- Nav Item - User Information -->

@@ -96,4 +96,13 @@ class UsersController extends Controller
         session()->flash('success','user has been Admin successfully.');
         return redirect()->back();
     }
+
+    public function notifications(){
+        auth()->user()->unreadNotifications->markAsRead();
+        return view('users.notifications',
+            [
+                'notifications'=>auth()->user()->notifications()->paginate(6)
+            ]);
+    }
+
 }

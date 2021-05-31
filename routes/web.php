@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function (){
 
     Route::get('user/posts/trashed',[\App\Http\Controllers\PostsController::class,'userTrashedPost'])->name('user.posts.trashed');
 
+    Route::get('user/notifications',[\App\Http\Controllers\UsersController::class,'notifications'])->name('notifications');
 });
 
 Route::middleware(['auth','admin'])->group(function (){

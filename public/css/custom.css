@@ -1,4 +1,7 @@
 /*custom css*/
+a {
+    text-decoration: none !important;
+}
 
 .card-google-plus {
     position: relative;
@@ -183,4 +186,10 @@
 
 .post-card{
     min-height: 350px !important;
+}
+
+.notification{
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

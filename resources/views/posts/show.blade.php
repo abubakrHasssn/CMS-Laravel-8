@@ -48,22 +48,26 @@
             </div>
         </form>
     @else
-        <a href="{{route('login')}}" class="btn btn-primary btn-lg">Login to add a Comment</a>
+        <div class="mb-3">
+            <a href="{{route('login')}}" class="btn btn-primary btn-lg">Login To Add a Comment</a>
+        </div>
+        <hr>
     @endauth
 
     <!-- Single Comment -->
     @if($post->comments->count() > 0)
-        @foreach($post->comments()->simplePaginate(4) as $comment)
+        @foreach($post->comments()->simplePaginate(6) as $comment)
             <div class="media mb-4">
                 <img class="d-flex mr-3 rounded-circle" width="40" src="{{asset('storage/'.$comment->user->avatar)}}" alt="userImage">
                 <div class="media-body">
-                    <h5 class="mt-0">{{$comment->user->name}}</h5>
+                    <a href="{{route('users.profile',$comment->user->username)}}"><h5 class="mt-0">{{$comment->user->name}}</h5></a>
                     {!! $comment->content !!}
                 </div>
             </div>
+            <hr>
         @endforeach
         <div class="mt-3 mb-4">
-            {{$post->comments()->simplePaginate(4)->links()}}
+            {{$post->comments()->simplePaginate(6)->links()}}
         </div>
     @else
         <div class="text-center">
