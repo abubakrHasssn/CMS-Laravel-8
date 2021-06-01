@@ -15,7 +15,7 @@ class PostsController extends Controller
     public function __construct()
     {
         $this->middleware(['verifyCategoriesCount'])->only('create','store');
-        $this->middleware(['auth'])->except('show');
+        $this->middleware(['auth'])->except('show','trashed');
         $this->middleware(['auth','admin'])->only('index');
     }
 
@@ -47,8 +47,6 @@ class PostsController extends Controller
      */
     public function store(CreatePostRequest $request)
     {
-        //get last inserted id
-        $last_id = Post::all()->count() > 0 ? Post::all()->last()->id : 0;
         $image =$request->image->store('posts');
             $post = auth()->user()->posts()->create([
             'title'         =>$request->title,
@@ -57,7 +55,7 @@ class PostsController extends Controller
             'published_at'  =>$request->published_at,
             'image'         =>$image,
             'category_id'   =>$request->category,
-            'slug' => Str::slug($request->title).'-'.$last_id+1
+            'slug' => Str::slug($request->title).'-'.$this->lastInsertedId()+1
         ]);
         if($request->tags){
             $post->tags()->attach($request->tags);
@@ -85,12 +83,12 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        if (auth()->user()->isAdmin() ||  auth()->user()->id === $post->user->id) {
+        if ($this->isAuthorized($post)) {
             $categories = Category::all();
             $tags = Tag::all();
             return view('posts.create', compact('post', 'categories', 'tags'));
         }else{
-            session()->flash('warning','you dont have permission to edit this.');
+            session()->flash('warning','you dont have permission perform this action.');
             return redirect()->back();
         }
     }
@@ -104,22 +102,26 @@ class PostsController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $data = $request->only(['title','description','contents','published_at']);
-        $data['category_id'] = $request->category;
-        $data['slug'] = Str::slug($request->title).'-'.$post->id;
-        if($request->hasFile('image')){
-            $image = $request->image->store('posts');
-            $post->deleteImage();
-            $data['image'] = $image;
+        if ($this->isAuthorized($post)) {
+            $data = $request->only(['title','description','contents','published_at']);
+            $data['category_id'] = $request->category;
+            $data['slug'] = Str::slug($request->title).'-'.$post->id;
+            if($request->hasFile('image')){
+                $image = $request->image->store('posts');
+                $post->deleteImage();
+                $data['image'] = $image;
+            }
+            $post->update($data);
+            if($request->tags){
+                $post->tags()->sync($request->tags);
+            }
+            session()->flash('success','post updated successfully.');
+            return redirect(route('user.posts'));
+        }else{
+            session()->flash('warning','you dont have permission perform this action.');
+            return redirect()->back();
         }
-        $post->update($data);
-        if($request->tags){
-            $post->tags()->sync($request->tags);
-        }
-        session()->flash('success','post updated successfully.');
-        return redirect(route('user.posts'));
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -130,6 +132,7 @@ class PostsController extends Controller
     public function destroy($id)
     {
         $post = Post::withTrashed()->where('id',$id)->firstOrFail();
+        if ($this->isAuthorized($post)) {
         if ($post->trashed()){
             $post->forceDelete();
             $post->deleteImage();
@@ -139,6 +142,10 @@ class PostsController extends Controller
             session()->flash('success','post has been trashed.');
         }
         return redirect()->back();
+        }else{
+            session()->flash('warning','you dont have permission to perform this action.');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -159,9 +166,14 @@ class PostsController extends Controller
      */
     public function restore($id){
         $post = Post::withTrashed()->whereId($id)->firstOrFail();
-        $post->restore();
-        session()->flash('success','post has been Restored.');
-        return redirect()->back();
+        if ($this->isAuthorized($post)) {
+            $post->restore();
+            session()->flash('success','post has been Restored.');
+            return redirect()->back();
+        }else{
+            session()->flash('warning','you dont have permission to perform this action.');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -181,5 +193,28 @@ class PostsController extends Controller
     public function userTrashedPost(){
         $trashed = auth()->user()->posts()->onlyTrashed()->get();
         return view('posts.index')->with('posts',$trashed);
+    }
+
+    /**
+     * confirm user authorization
+     *
+     * @param $post
+     * @return bool
+     */
+    public function isAuthorized($post){
+        if (auth()->user()->isAdmin() ||  auth()->user()->id === $post->user->id){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * get last inserted id
+     *
+     * @return int
+     */
+    public function lastInsertedId(){
+        return Post::all()->count() > 0 ? Post::all()->last()->id : 0;
     }
 }

@@ -33,18 +33,20 @@
                         <label for="name">Full Name</label>
                         <input type="text" class="form-control" name="name" id="name" value="{{isset($user) ? $user->name :''}}">
                     </div>
-                    <div class="form-group">
-                        <label for="role">Role</label>
-                        <select class="form-control" name="role" id="role" >
-                            @foreach($roles as $role)
-                                <option value="{{$role->name}}"
-                                        @if(isset($user) && $role->name === $user->role())
-                                           selected
-                                        @endif
-                                >{{$role->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @if(auth()->user()->isAdmin())
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select class="form-control" name="role" id="role" >
+                                @foreach($roles as $role)
+                                    <option value="{{$role->name}}"
+                                            @if(isset($user) && $role->name === $user->role())
+                                               selected
+                                            @endif
+                                    >{{$role->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <label for="about">About</label>
                         <textarea name="about" id="about" class="form-control" rows="5" cols="5">{{isset($user) ? $user->about :''}}</textarea>
@@ -59,10 +61,47 @@
                     </div>
                     @endif
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success">{{isset($user) ? 'Update User' :'Create user'}}</button>
+                        <button type="submit" class="btn btn-primary">{{isset($user) ? 'Update User' :'Create user'}}</button>
                     </div>
                 </form>
             </div>
         </div>
+        @if(isset($user))
+            <div class="card mt-5">
+                <div class="card-header">Change Password</div>
+                <div class="card-body">
+                    <form method="POST" action="{{ route('password.change') }}">
+                        @csrf
+                        <div class="form-group row">
+                            <label for="old_password" class="col-md-4 col-form-label text-md-right">Old Password</label>
+                            <div class="col-md-6">
+                                <input id="old_password" type="password" class="form-control" name="old_password" value="{{ old('old_password') }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="password" class="col-md-4 col-form-label text-md-right">New Password</label>
+                            <div class="col-md-6">
+                                <input id="password" type="password" class="form-control" name="new_password" value="{{ old('new_password') }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">Confirm New Password</label>
+                            <div class="col-md-6">
+                                <input id="password-confirm" type="password" class="form-control" name="new_password_confirmation" value="{{ old('new_password_confirmation') }}">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Change Password
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        @endif
     </div>
+
 @endsection
+
