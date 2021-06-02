@@ -12,7 +12,7 @@
                                     <div class="col-md-6 mb-2">
                                         <div class="card border mb-6 d-block post-card">
                                             <a href="{{route('posts.show',$post->slug)}}"><img class="card-img-top" src="{{asset('storage/'.$post->image)}}" alt="{{$post->title}}"></a>
-                                            <div class="p-6  text-center">
+                                            <div class="poster p-6 text-center">
                                                 <p><a class="small text-lighter text-uppercase text-secondary" href="
                                                     @if(request()->query('tag'))
                                                     {{route('home',['category='.$post->category->slug,'tag='.request()->query('tag')])}}
@@ -24,7 +24,7 @@
                                                     <span class="badge badge-dark">{{$tag->name}}</span>
                                                     @endforeach
                                                 </div>
-                                                <h5 class="mb-0"><a class="text-dark" href="{{route('posts.show',$post->slug)}}">{{$post->description}}</a></h5>
+                                                <h5 class="mb-0"><a class="text-dark" href="{{route('posts.show',$post->slug)}}">{{$post->title}}</a></h5>
                                             </div>
                                         </div>
                                     </div>

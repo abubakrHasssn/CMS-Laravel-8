@@ -22,12 +22,3 @@ class verifyUserAdminOrModerator
         return $next($request);
     }
 }
-/*
- * mod add  false
- *
- * !mod add  false
- *
- * mod !add  false
- *
- * !mod !add true
- */

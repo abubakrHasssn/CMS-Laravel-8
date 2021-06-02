@@ -193,3 +193,9 @@ a {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.poster{
+    height: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
